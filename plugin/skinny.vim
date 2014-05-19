@@ -9,7 +9,7 @@ function! skinny#view(pattern)
 endfunction
 
 function! skinny#openModel(model)
-  execute 'vsplit ' .  glob("**/" . a:model)
+  execute 'botright vsplit  ' .  glob("**/" . a:model)
 endfunction
 
 function! skinny#lsitPossibilityModelName(model)
