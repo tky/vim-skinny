@@ -8,6 +8,10 @@ function! skinny#view(pattern)
   endfor
 endfunction
 
+function! skinny#openModel(model)
+  execute 'vsplit ' .  glob("**/" . a:model)
+endfunction
+
 function! skinny#lsitPossibilityModelName(model)
   let a:lowerModel = tolower(a:model)
   let a:chopModel = strpart(a:lowerModel, 0, strlen(a:lowerModel)-1)
@@ -22,6 +26,34 @@ function! skinny#findView(target, pattern)
       return file
     endif
   endfor
+endfunction
+
+function! skinny#listAllModels()
+  vsplit __SKINNY_MODELS__
+  setlocal buftype=nowrite
+  setlocal bufhidden=hide
+  setlocal noswapfile
+  setlocal nobuflisted
+  setlocal nowrap
+  setlocal cursorline
+  setlocal nofoldenable
+  setlocal modifiable
+  call append(0, skinny#findAllModelNames())
+  setlocal nomodifiable
+  nnoremap <buffer> <silent> m :call skinny#openModel(getline("."))<CR>
+endfunction
+
+function! skinny#findAllModelNames()
+  let filelist  = glob("**/model/*")
+  let splitted = split(filelist, "\n")
+  let a:models = []
+  for model in splitted
+    if (model !~ "test/")
+      let a:divided = split(model, "/")
+      call add(a:models, a:divided[len(a:divided) - 1])
+    endif
+  endfor
+  return a:models
 endfunction
 
 
