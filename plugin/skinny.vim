@@ -1,6 +1,6 @@
-function! skinny#index()
+function! skinny#view(pattern)
   for posibility in skinny#lsitPossibilityModelName(skinny#getModel())
-    let a:file = skinny#findView(posibility, "index.html")
+    let a:file = skinny#findView(posibility, a:pattern)
     if (!empty(a:file)) 
       execute 'split ' . a:file
       return
