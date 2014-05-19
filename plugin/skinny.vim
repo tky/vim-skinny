@@ -12,6 +12,32 @@ function! skinny#openModel(model)
   execute 'botright vsplit  ' .  glob("**/" . a:model)
 endfunction
 
+function! skinny#openController(model)
+  let a:controller = skinny#findController(a:model)
+  if (!empty(a:controller)) 
+    execute 'botright vsplit  ' .  a:controller
+  endif
+endfunction
+
+function! skinny#findController(model)
+  for posibility in skinny#lsitPossibilityModelName(skinny#filterExtension(a:model))
+    let a:filelist  = skinny#searchFile("**/controller/" . posibility . "*")
+    if (!empty(a:filelist))
+      return a:filelist[0]
+    endif
+  endfor
+endfunction
+
+function! skinny#filterExtension(model)
+  let a:splitted = split(a:model, "\\.")
+  return a:splitted[0]
+endfunction
+
+function! skinny#searchFile(pattern)
+    let filelist  = glob(a:pattern)
+    return split(filelist, "\n")
+endfunction
+
 function! skinny#lsitPossibilityModelName(model)
   let a:lowerModel = tolower(a:model)
   let a:chopModel = strpart(a:lowerModel, 0, strlen(a:lowerModel)-1)
@@ -40,7 +66,9 @@ function! skinny#listAllModels()
   setlocal modifiable
   call append(0, skinny#findAllModelNames())
   setlocal nomodifiable
+  " pass select model (contains extension)
   nnoremap <buffer> <silent> m :call skinny#openModel(getline("."))<CR>
+  nnoremap <buffer> <silent> c :call skinny#openController(getline("."))<CR>
 endfunction
 
 function! skinny#findAllModelNames()
