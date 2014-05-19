@@ -11,7 +11,7 @@ endfunction
 function! skinny#lsitPossibilityModelName(model)
   let a:lowerModel = tolower(a:model)
   let a:chopModel = strpart(a:lowerModel, 0, strlen(a:lowerModel)-1)
-  return [a:chopModel, a:lowerModel]
+  return [a:lowerModel, a:chopModel]
 endfunction
 
 function! skinny#findView(target, pattern)
@@ -38,9 +38,13 @@ function! skinny#getCurrentLocation()
 endfunction
 
 function! skinny#getModel()
+  " modelの場合とcontrollerの場合で値が異なるのをなんとかしたい。
   let a:path = expand("%:p")
   if (a:path =~ "model")
       return expand("%:t:r")
+  elseif (a:path =~ "controller")
+      let a:filename = expand("%:t:r")[:10]
+      return strpart(a:filename, 0, strlen(a:filename)-10)
   else
       " TODO
       echo a:path
