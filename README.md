@@ -1,1 +1,1 @@
-## vim plugin supporeted skinny framework!!
+## vim plugin supported skinny framework!!
