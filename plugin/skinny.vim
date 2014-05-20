@@ -55,7 +55,12 @@ function! skinny#findView(target, pattern)
 endfunction
 
 function! skinny#listAllModels()
+  let s:listDisplayType = 'model'
   vsplit __SKINNY_MODELS__
+  call skinny#openListPage()
+endfunction
+
+function! skinny#openListPage()
   setlocal buftype=nowrite
   setlocal bufhidden=hide
   setlocal noswapfile
@@ -64,15 +69,26 @@ function! skinny#listAllModels()
   setlocal cursorline
   setlocal nofoldenable
   setlocal modifiable
-  call append(0, skinny#findAllModelNames())
+  1,$delete
+  call append(0, skinny#findToListPageObjects(s:listDisplayType))
   setlocal nomodifiable
+  nnoremap <buffer> <silent> t :call skinny#toggleListPage()<CR>
   " pass select model (contains extension)
   nnoremap <buffer> <silent> m :call skinny#openModel(getline("."))<CR>
   nnoremap <buffer> <silent> c :call skinny#openController(getline("."))<CR>
 endfunction
 
-function! skinny#findAllModelNames()
-  let filelist  = glob("**/model/*")
+function! skinny#toggleListPage()
+  if (s:listDisplayType == 'model')
+    let s:listDisplayType = 'controller'
+  else
+    let s:listDisplayType = 'model'
+  endif
+  call skinny#openListPage()
+endfunction
+
+function! skinny#findToListPageObjects(displayType)
+  let filelist  = glob("**/" . a:displayType ."/*")
   let splitted = split(filelist, "\n")
   let a:models = []
   for model in splitted
@@ -83,7 +99,6 @@ function! skinny#findAllModelNames()
   endfor
   return a:models
 endfunction
-
 
 function! skinny#getCurrentLocation()
   let a:path = expand("%:p")
