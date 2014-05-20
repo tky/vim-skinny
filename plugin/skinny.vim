@@ -133,7 +133,7 @@ function! skinny#getPrefix(file, prefixLength)
   if (isdirectory(a:file)) 
     return "            "[0 : a:depth] .  "|+ "
   else 
-    return "            "[0 : a:depth]
+    return "            "[0 : a:depth + 2]
   endif
 endfunction
 
