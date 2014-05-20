@@ -93,14 +93,17 @@ endfunction
 function! skinny#findToListPageObjects(displayType)
   if (a:displayType == 'model')
     let a:splitted = skinny#findAllModel()
+    let a:prefixLength = len(s:modelPath) + 1
   elseif (a:displayType == 'controller')
     let a:splitted = skinny#findAllController()
+    let a:prefixLength = len(s:controllerPath) + 1
   endif
+
   let a:models = []
   for model in a:splitted
     if (model !~ "test/" && model !~ "target/" && !isdirectory(model))
       let a:divided = split(model, "/")
-      call add(a:models, a:divided[len(a:divided) - 1])
+      call add(a:models, model[a:prefixLength : ])
     endif
   endfor
   return a:models
