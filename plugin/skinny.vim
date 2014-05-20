@@ -1,3 +1,5 @@
+let s:init = 0
+
 function! skinny#view(pattern)
   for posibility in skinny#lsitPossibilityModelName(skinny#getModel())
     let a:file = skinny#findView(posibility, a:pattern)
@@ -55,6 +57,7 @@ function! skinny#findView(target, pattern)
 endfunction
 
 function! skinny#listAllModels()
+  call skinny#init()
   let s:listDisplayType = 'model'
   vsplit __SKINNY_MODELS__
   call skinny#openListPage()
@@ -88,16 +91,27 @@ function! skinny#toggleListPage()
 endfunction
 
 function! skinny#findToListPageObjects(displayType)
-  let filelist  = glob("**/" . a:displayType ."/*")
-  let splitted = split(filelist, "\n")
+  if (a:displayType == 'model')
+    let a:splitted = skinny#findAllModel()
+  elseif (a:displayType == 'controller')
+    let a:splitted = skinny#findAllController()
+  endif
   let a:models = []
-  for model in splitted
+  for model in a:splitted
     if (model !~ "test/" && model !~ "target/")
       let a:divided = split(model, "/")
       call add(a:models, a:divided[len(a:divided) - 1])
     endif
   endfor
   return a:models
+endfunction
+
+function! skinny#findAllController()
+  return split(glob(s:controllerPath . "/**"), "\n")
+endfunction
+
+function! skinny#findAllModel()
+  return split(glob(s:modelPath . "/**"), "\n")
 endfunction
 
 function! skinny#getCurrentLocation()
@@ -124,4 +138,36 @@ function! skinny#getModel()
       " TODO
       echo a:path
   endif
+endfunction
+
+function! skinny#init()
+  if (s:init == 0) 
+    call skinny#initPathSettings()
+    let s:init = 1
+  endif
+endfunction
+
+function! skinny#test()
+  call skinny#init()
+  let filelist  = glob(s:controllerPath . "/**")
+  echo filelist
+endfunction
+
+function! skinny#initPathSettings()
+  let s:controllerPath = ""
+  let s:modelPath = ""
+  let s:viewPath = ""
+  let s:openDirectory = getcwd()
+  echo s:openDirectory
+  let filelist  = glob(s:openDirectory . "/**")
+  let splitted = split(filelist, "\n")
+  for file in splitted
+    if (file =~ "**/controller" && empty(s:controllerPath))
+      let s:controllerPath = file
+    elseif (file =~ "**/model" && empty(s:modelPath))
+      let s:modelPath = file
+    elseif (file =~ "**/WEB-INF/views" && empty(s:viewPath))
+      let s:viewPath = file
+    endif
+  endfor
 endfunction
