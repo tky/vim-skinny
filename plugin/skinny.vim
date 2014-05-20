@@ -98,7 +98,7 @@ function! skinny#findToListPageObjects(displayType)
   endif
   let a:models = []
   for model in a:splitted
-    if (model !~ "test/" && model !~ "target/")
+    if (model !~ "test/" && model !~ "target/" && !isdirectory(model))
       let a:divided = split(model, "/")
       call add(a:models, a:divided[len(a:divided) - 1])
     endif
