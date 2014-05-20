@@ -72,6 +72,16 @@ function! skinny#openListPage()
   setlocal cursorline
   setlocal nofoldenable
   setlocal modifiable
+
+  set filetype=skinnyvim
+
+  "syntax region skinnyvimDirectory start='^ *+' end='$'
+  syntax region skinnyvimRootDirectory start='^ *+' end='$'
+  syntax region skinnyvimChildDirectory start='^ *|+' end='$'
+
+  highlight def link skinnyvimRootDirectory Preproc
+  highlight def link skinnyvimChildDirectory Preproc
+
   1,$delete
   call append(0, skinny#findToListPageObjects(s:listDisplayType))
   setlocal nomodifiable
