@@ -76,7 +76,7 @@ function! skinny#findAllModelNames()
   let splitted = split(filelist, "\n")
   let a:models = []
   for model in splitted
-    if (model !~ "test/")
+    if (model !~ "test/" && model !~ "target/")
       let a:divided = split(model, "/")
       call add(a:models, a:divided[len(a:divided) - 1])
     endif
