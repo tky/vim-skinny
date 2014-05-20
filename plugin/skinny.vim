@@ -113,8 +113,8 @@ function! skinny#findToListPageObjects(displayType)
   for model in a:splitted
     if (model !~ "test/" && model !~ "target/")
       if (isdirectory(model))
-        "let a:divided = fnamemodify(model[a:prefixLength : ], ':h')
-        call add(a:models, skinny#getPrefix(model, a:prefixLength) . model[a:prefixLength : ])
+        let a:divided = split(model[a:prefixLength : ], "/")
+        call add(a:models, skinny#getPrefix(model, a:prefixLength) . a:divided[len(a:divided) - 1])
       else
         let a:divided = split(model, "/")
         call add(a:models, skinny#getPrefix(model, a:prefixLength) . a:divided[len(a:divided) - 1])
