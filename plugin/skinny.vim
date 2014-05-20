@@ -104,32 +104,27 @@ function! skinny#findToListPageObjects(displayType)
     if (model !~ "test/" && model !~ "target/")
       if (isdirectory(model))
         "let a:divided = fnamemodify(model[a:prefixLength : ], ':h')
-        call add(a:models, skinny#getPrefix(model) . model[a:prefixLength : ])
+        call add(a:models, skinny#getPrefix(model, a:prefixLength) . model[a:prefixLength : ])
       else
         let a:divided = split(model, "/")
-        call add(a:models, skinny#getPrefix(model) . a:divided[len(a:divided) - 1])
+        call add(a:models, skinny#getPrefix(model, a:prefixLength) . a:divided[len(a:divided) - 1])
       endif
     endif
   endfor
   return a:models
 endfunction
 
-function! skinny#getPrefix(file)
-  let a:depth = skinny#getDepth(a:file)
+function! skinny#getPrefix(file, prefixLength)
+  let a:depth = len(split(a:file[a:prefixLength - 1 : ], '/')) - 1
   if (a:depth == 0 && isdirectory(a:file)) 
-    return " + "
+    return "+ "
   endif
 
   if (isdirectory(a:file)) 
-    return "      "[0 : a:depth] .  "|+ "
+    return "            "[0 : a:depth] .  "|+ "
   else 
-    return "      "[0 : a:depth + 2]
+    return "            "[0 : a:depth]
   endif
-endfunction
-
-function! skinny#getDepth(file)
-  "Fix Me
-  return 1
 endfunction
 
 function! skinny#findAllController()
