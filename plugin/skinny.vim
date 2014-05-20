@@ -11,11 +11,13 @@ function! skinny#view(pattern)
 endfunction
 
 function! skinny#openModel(model)
-  execute 'botright vsplit  ' .  glob("**/" . a:model)
+  let a:trimed = substitute(a:model, " ", "", "g")
+  execute 'botright vsplit  ' .  glob("**/" . a:trimed)
 endfunction
 
 function! skinny#openController(model)
-  let a:controller = skinny#findController(a:model)
+  let a:trimed = substitute(a:model, " ", "", "g")
+  let a:controller = skinny#findController(a:trimed)
   if (!empty(a:controller)) 
     execute 'botright vsplit  ' .  a:controller
   endif
@@ -43,7 +45,7 @@ endfunction
 function! skinny#lsitPossibilityModelName(model)
   let a:lowerModel = tolower(a:model)
   let a:chopModel = strpart(a:lowerModel, 0, strlen(a:lowerModel)-1)
-  return [a:lowerModel, a:chopModel]
+  return [a:model, a:lowerModel, a:chopModel]
 endfunction
 
 function! skinny#findView(target, pattern)
@@ -189,7 +191,6 @@ function! skinny#initPathSettings()
   let s:modelPath = ""
   let s:viewPath = ""
   let s:openDirectory = getcwd()
-  echo s:openDirectory
   let filelist  = glob(s:openDirectory . "/**")
   let splitted = split(filelist, "\n")
   for file in splitted
