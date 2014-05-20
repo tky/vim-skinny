@@ -101,9 +101,14 @@ function! skinny#findToListPageObjects(displayType)
 
   let a:models = []
   for model in a:splitted
-    if (model !~ "test/" && model !~ "target/" && !isdirectory(model))
-      let a:divided = split(model, "/")
-      call add(a:models, model[a:prefixLength : ])
+    if (model !~ "test/" && model !~ "target/")
+      if (isdirectory(model))
+        "let a:divided = fnamemodify(model[a:prefixLength : ], ':h')
+        call add(a:models, "+" . model[a:prefixLength : ])
+      else
+        let a:divided = split(model, "/")
+        call add(a:models, " " . a:divided[len(a:divided) - 1])
+      endif
     endif
   endfor
   return a:models
