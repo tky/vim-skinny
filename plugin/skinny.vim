@@ -12,7 +12,9 @@ endfunction
 
 function! skinny#openModel(model)
   let a:trimed = substitute(a:model, " ", "", "g")
-  execute 'botright vsplit  ' .  glob("**/" . a:trimed)
+  let filelist  = glob("**/" . a:trimed)
+  let splitted = split(filelist, "\n")
+  execute 'botright vsplit  ' .  splitted[0]
 endfunction
 
 function! skinny#openController(model)
